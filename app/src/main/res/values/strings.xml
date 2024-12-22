@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Signup Login Realtime</string>
+    <string name="timing">Timing: 9:0am-12:00pm</string>
+    <string name="sai_pooja_location">Location: 1st floor</string>
+    <string name="address">Address:</string>
+    <string name="name_tag_sai_pooja">Sai Pooja Canteen</string>
+    <string name="profile_setup">Profile</string>
+    <string name="cart_frag">Cart</string>
+    <string name="search_frag">Search</string>
+    <string name="orders_frag">Orders</string>
+    <string name="home_txt">Home</string>
+    <string name="bits_bytes"><![CDATA[Bits&Bytes]]></string>
+</resources>
