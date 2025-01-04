@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.signuploginrealtime" />
-                  <option name="mobileSdkAppId" value="1:385754945204:android:cccdeb21e4b2606f9ee9e1" />
-                  <option name="projectId" value="signup-login-realtime-72ad6" />
-                  <option name="projectNumber" value="385754945204" />
+                  <option name="mobileSdkAppId" value="1:1074051432811:android:ce7420859997760f070c2e" />
+                  <option name="projectId" value="database-bitsnbytes" />
+                  <option name="projectNumber" value="1074051432811" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -70,6 +70,14 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <!-- Enable Google Pay API -->
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+        <!-- Add your Google Pay Merchant ID -->
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.merchantId"
+            android:value="BCR2DN4TX7F5ZDS5" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 
