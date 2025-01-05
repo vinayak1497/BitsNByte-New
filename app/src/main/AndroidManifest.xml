@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SignupLoginRealtime"
         tools:targetApi="31">
+        <activity
+            android:name=".Addfundsgooglepay"
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
             android:exported="false">
@@ -69,18 +75,13 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>
-        <!-- Enable Google Pay API -->
+        </activity> <!-- Enable Google Pay API -->
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
-            android:value="true" />
-        <!-- Add your Google Pay Merchant ID -->
+            android:value="true" /> <!-- Add your Google Pay Merchant ID -->
         <meta-data
             android:name="com.google.android.gms.wallet.api.merchantId"
             android:value="BCR2DN4TX7F5ZDS5" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

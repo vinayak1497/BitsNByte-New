@@ -10,4 +10,6 @@
     <string name="orders_frag">Orders</string>
     <string name="home_txt">Home</string>
     <string name="bits_bytes"><![CDATA[Bits&Bytes]]></string>
+    <string name="wallet">Wallet</string>
+    <string name="balance">Balance:</string>
 </resources>

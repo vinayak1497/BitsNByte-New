@@ -7,9 +7,9 @@
         android:title="@string/home_txt" />
 
     <item
-        android:id="@+id/navigation_order_list"
-        android:icon="@drawable/icon_history_24"
-        android:title="@string/orders_frag" />
+        android:id="@+id/navigation_wallet"
+        android:icon="@drawable/baseline_account_balance_wallet_24"
+        android:title="@string/wallet" />
 
     <item
         android:id="@+id/nav_search"

@@ -33,8 +33,8 @@ public class sai_pooja_main_fragment extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.navigation_home) {
                     loadfrag(new sai_pooja_frag_nav_home(), false);
-                } else if (id == R.id.navigation_order_list) {
-                    loadfrag(new sai_pooja_frag_nav_order_list(), false);
+                } else if (id == R.id.navigation_wallet) {
+                    loadfrag(new sai_pooja_frag_nav_wallet(), false);
                 } else if (id == R.id.nav_search) {
                     loadfrag(new sai_pooja_frag_nav_search(), false);
                 } else if (id == R.id.navigation_cart) {
