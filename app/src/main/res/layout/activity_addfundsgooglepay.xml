@@ -11,15 +11,17 @@
     
     <com.google.android.material.textfield.TextInputEditText
         android:layout_width="200dp"
+        android:id="@+id/paystatus"
         android:layout_height="80dp"
         android:hint="0.00"
         android:textSize="50sp"
         android:gravity="center" />
 
     <Button
+        android:id="@+id/paywithrazorpay"
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:text="Pay with Google Pay"
+        android:text="Pay with RazorPay"
         android:gravity="center"/>
 
 </LinearLayout>

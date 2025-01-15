@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.google.gms.google.services) // Make sure this line is present
 }
 
+
+
 android {
     namespace = "com.example.signuploginrealtime"
     compileSdk = 35
@@ -44,6 +46,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation ("com.google.android.gms:play-services-wallet:19.4.0")
+    implementation ("com.razorpay:checkout:1.6.40")
 }
 
 apply(plugin = "com.google.gms.google-services")
