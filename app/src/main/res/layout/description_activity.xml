@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Description_Activity">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/back_btn"
+        android:layout_width="39dp"
+        android:layout_height="42dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/white" />
+        app:srcCompat="@drawable/back_button"
+        tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/item_image"
-        android:layout_width="match_parent"
+        android:id="@+id/food_item_image"
+        android:layout_width="300dp"
         android:layout_height="320dp"
-        android:layout_marginBottom="192dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -36,214 +40,175 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="50dp"
         app:cardElevation="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginVertical="10dp"
+        app:cardBackgroundColor="@color/white">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="100dp"
-                android:layout_height="35dp"
-                android:background="@drawable/yellow_bg"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.876"
-                app:layout_constraintStart_toEndOf="@+id/title"
-                app:layout_constraintTop_toTopOf="@+id/title"
-                app:layout_constraintVertical_bias="1.0">
-
-
+                android:paddingHorizontal="20dp"
+                android:paddingTop="30dp">
                 <TextView
-                    android:id="@+id/minus_btn"
-                    android:layout_width="30dp"
-                    android:layout_height="28dp"
-                    android:gravity="center"
-                    android:text="-"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/value"
-                    android:layout_width="20dp"
+                    android:id="@+id/food_item_name"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Chinese Bhel"
+                    android:textSize="25sp"
+                    android:layout_marginRight="150dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.06"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.043" />
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/yellow_bg"
                     android:gravity="center"
-                    android:text="1"
-                    android:textSize="18sp"
-                    android:layout_marginEnd="6dp"
-                    android:layout_marginStart="6dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@+id/title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.876"
+                    app:layout_constraintStart_toEndOf="@+id/title"
+                    app:layout_constraintTop_toTopOf="@+id/title"
+                    app:layout_constraintVertical_bias="1.0">
 
-                <TextView
-                    android:id="@+id/plus_btn"
-                    android:layout_width="30dp"
-                    android:layout_height="28dp"
-                    android:gravity="center"
-                    android:text="+"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    <!-- Minus Button -->
+                    <TextView
+                        android:id="@+id/minus_btn"
+                        android:layout_width="30dp"
+                        android:layout_height="28dp"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:text="-"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" /> <!-- Transparent background -->
+
+                    <!-- Value TextView -->
+                    <TextView
+                        android:id="@+id/value"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="6dp"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- Plus Button -->
+                    <TextView
+                        android:id="@+id/plus_btn"
+                        android:layout_width="30dp"
+                        android:layout_height="28dp"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" /> <!-- Transparent background -->
+                </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/title"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+                <TextView
+                    android:id="@+id/ingredients"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Ingredients:"
+                    android:layout_marginRight="15dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/ingredients_name"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="kjshafb askjhfs fklsealfb as fh aljfajflbef"
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+                <TextView
+                    android:id="@+id/shelf_life"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Shelf Life:"
+                    android:layout_marginRight="30dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/shelf_life_time"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="2 - 3 hours."
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Price:"
+                    android:layout_marginRight="70dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+
+                <TextView
+                    android:id="@+id/price_name"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="20.00"
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add_to_cart_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chinese Bhel"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.06"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.043" />
-
-
-
-
-            <TextView
-                android:id="@+id/ingredients"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Ingredients:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.052"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
-
-            <TextView
-                android:id="@+id/ingredients_name"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="kjshafb askjhfs fklsealfb as fh aljfajflbef"
-                android:textSize="20sp"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.555"
-                app:layout_constraintStart_toEndOf="@+id/ingredients"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
-
-            <TextView
-                android:id="@+id/shelf_life"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Shelf Life:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.052"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ingredients_name" />
-
-            <TextView
-                android:id="@+id/shelf_life_time"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="2 - 3 hours."
-                android:textSize="20sp"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.757"
-                app:layout_constraintStart_toEndOf="@+id/shelf_life"
-                app:layout_constraintTop_toBottomOf="@+id/ingredients_name" />
-
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Price:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.052"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shelf_life_time" />
-
-
-            <TextView
-                android:id="@+id/price_name"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="20.00"
-                android:textSize="20sp"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.888"
-                app:layout_constraintStart_toEndOf="@+id/price"
-                app:layout_constraintTop_toBottomOf="@+id/shelf_life_time" />
-
-            <androidx.cardview.widget.CardView
-                android:foregroundGravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                app:cardCornerRadius="50dp"
-                android:layout_margin="30dp"
-                app:cardElevation="0dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#fcc93a"
+                android:text="Add to Cart"
+                android:textColor="@color/black"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/price_name">
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Button
-                        android:id="@+id/add_to_cart_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:backgroundTint="#fcc93a"
-                        android:text="      Add to Cart"
-                        android:textColor="@color/black"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/cart_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.14"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/baseline_shopping_cart_24"
-                        tools:ignore="MissingConstraints" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="39dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back_button"
-        tools:ignore="ContentDescription" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

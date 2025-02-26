@@ -1,65 +1,109 @@
 package com.example.signuploginrealtime;
-
+import android.annotation.SuppressLint;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class Description_Activity extends AppCompatActivity {
-    private ImageView food_image, back_button, cart_btn_image;
-    private Button cart_btn;
-    private TextView title, ingredients, shelf_life, price, plus, minus, number;
 
-    @SuppressLint("MissingInflatedId")
+    private ImageView foodImage, backButton;
+    private TextView foodName, foodIngredients, foodPrice, quantityTextView, incrementButton, decrementButton;
+    private Button addToCartButton;
+
+    int quantity = 1; // Initial quantity
+    float itemPrice;  // Updated to numeric type for better calculations
+
+    @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.description_activity);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        // Initialize views
+        foodImage = findViewById(R.id.food_item_image);
+        foodName = findViewById(R.id.food_item_name);
+        foodIngredients = findViewById(R.id.ingredients_name);
+        foodPrice = findViewById(R.id.price_name);
+        quantityTextView = findViewById(R.id.value);
+        addToCartButton = findViewById(R.id.add_to_cart_btn);
+        incrementButton = findViewById(R.id.plus_btn);
+        decrementButton = findViewById(R.id.minus_btn);
+        backButton = findViewById(R.id.back_btn);
+
+        // Set back button functionality
+        backButton.setOnClickListener(v -> finish());
+
+        // Get intent data
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+        String ingredients = intent.getStringExtra("ingredientsId");
+        int imageResId = intent.getIntExtra("imageResId", 0);
+        String price = intent.getStringExtra("pricetag");
+
+
+        // Log the price for debugging
+        Log.d("PriceDebug", "Price passed: " + price);
+
+        // Convert price to numeric type for calculations
+        if (price != null && !price.isEmpty()) {
+            try {
+                itemPrice = Float.parseFloat(price.replace("Rs.", "").trim());  // Remove Rs. and parse
+                foodPrice.setText("₹ " + itemPrice);
+            } catch (NumberFormatException e) {
+                itemPrice = 0.0f;
+                foodPrice.setText("₹ 0.0");
+            }
+        }
+
+        // Set data to UI components
+        foodName.setText(name != null ? name : "N/A");
+        foodIngredients.setText(ingredients != null ? ingredients : "N/A");
+        foodImage.setImageResource(imageResId);
+        foodPrice.setText("₹ " + itemPrice);
+
+        // Increment quantity
+        incrementButton.setOnClickListener(v -> {
+            quantity++;
+            updateQuantity();
         });
 
+        // Decrement quantity
+        decrementButton.setOnClickListener(v -> {
+            if (quantity > 1) {
+                quantity--;
+                updateQuantity();
+            }
+        });
 
-        // Initialize views
-        food_image = findViewById(R.id.item_image);
-        cart_btn_image = findViewById(R.id.cart_image);
-        cart_btn = findViewById(R.id.add_to_cart_btn);
-        title = findViewById(R.id.title);
-        ingredients = findViewById(R.id.ingredients_name);
-        shelf_life = findViewById(R.id.shelf_life_time);
-        price = findViewById(R.id.price_name);
-        plus = findViewById(R.id.plus_btn);
-        minus = findViewById(R.id.minus_btn);
-        number = findViewById(R.id.value);
+        // Add to Cart functionality
+        addToCartButton.setOnClickListener(v -> {
+            String foodNameString = foodName.getText().toString().trim();
+            String foodPriceString = foodPrice.getText().toString().trim();
 
-        // **Retrieve data from the intent**
-        Intent intent = getIntent();
-        String foodTitle = intent.getStringExtra("name");  // Get the title/name passed from RecyclerView
-        int foodImageRes = intent.getIntExtra("imageResId", 0); // Get the image resource ID passed
-        String ingredientstitle = intent.getStringExtra("ingredientsId");
-        String pricetitle = intent.getStringExtra("pricetag");
+            if (foodNameString.isEmpty()) {
+                Toast.makeText(this, "Invalid food name", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            // Add to Cart via CartManager
+            CartManager.getInstance().addToCart(foodNameString, quantity, itemPrice * quantity);
 
-        // **Set the data to the views**
-        title.setText(foodTitle);  // Set the name/title to the title TextView
-        food_image.setImageResource(foodImageRes);// Set the image to the ImageView// Set button text if needed (optional)
-        ingredients.setText(ingredientstitle);
-        price.setText(pricetitle);
+            // Show confirmation
+            Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+            finish(); // Close the activity after adding to the cart
+        });
+    }
 
-        // **You can also fetch and display other data like ingredients, price, etc.**
-        // For now, I am setting the basic data (name and image), you can add more as per your app logic.
+    @SuppressLint("SetTextI18n")
+    private void updateQuantity() {
+        quantityTextView.setText(String.valueOf(quantity));
+        foodPrice.setText("₹ " + (itemPrice * quantity));  // Update price when quantity changes
     }
 }
