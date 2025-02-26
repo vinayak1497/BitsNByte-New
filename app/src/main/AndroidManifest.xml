@@ -26,6 +26,27 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".admin_canteen_selection"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Admin_sai_pooj_main_frag"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Canteen_selection_user"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".OpeningScreen"
             android:exported="true">
             <intent-filter>

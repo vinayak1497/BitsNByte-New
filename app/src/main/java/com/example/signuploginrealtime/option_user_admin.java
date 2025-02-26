@@ -35,7 +35,8 @@ public class option_user_admin extends AppCompatActivity {
         admin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(option_user_admin.this, "Coming Soon!!", Toast.LENGTH_SHORT).show();
+                Intent intent= new Intent(option_user_admin.this, admin_canteen_selection.class);
+                startActivity(intent);
             }
         });
 
