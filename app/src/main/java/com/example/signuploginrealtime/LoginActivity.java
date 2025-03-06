@@ -78,53 +78,42 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void checkUser(){
+    public void checkUser() {
         String userUsername = loginMoodle.getText().toString().trim();
         String userPassword = loginPassword.getText().toString().trim();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        Query checkUserDatabase = reference.orderByChild("username").equalTo(userUsername);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(userUsername);
 
-        checkUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                DataSnapshot userSnapshot = task.getResult();
 
-                if (snapshot.exists()){
-                    loginMoodle.setError(null);
-                    String passwordFromDB = snapshot.child(userUsername).child("password").getValue(String.class);
+                String passwordFromDB = userSnapshot.child("password").getValue(String.class);
+                if (passwordFromDB != null && passwordFromDB.equals(userPassword)) {
 
-                    if (passwordFromDB.equals(userPassword)){
-                        loginMoodle.setError(null);
+                    // Retrieve user details
+                    String nameFromDB = userSnapshot.child("name").getValue(String.class);
+                    String emailFromDB = userSnapshot.child("email").getValue(String.class);
+                    String contactNo = userSnapshot.child("contactNo").getValue(String.class);
+                    String branch = userSnapshot.child("branch").getValue(String.class);
+                    String division = userSnapshot.child("division").getValue(String.class);
+                    String year = userSnapshot.child("year").getValue(String.class);
 
-                        //Pass the data using intent
+                    // Store data in Singleton
+                    HelperClass user = new HelperClass(nameFromDB, emailFromDB, userUsername, passwordFromDB, contactNo, branch, division, year);
+                    UserDataSingleton.getInstance().setUserData(user);
 
-                        String nameFromDB = snapshot.child(userUsername).child("name").getValue(String.class);
-                        String emailFromDB = snapshot.child(userUsername).child("email").getValue(String.class);
-                        String usernameFromDB = snapshot.child(userUsername).child("username").getValue(String.class);
-
-                        Intent intent = new Intent(LoginActivity.this, sai_pooja_main_fragment.class);
-
-                        intent.putExtra("name", nameFromDB);
-                        intent.putExtra("email", emailFromDB);
-                        intent.putExtra("username", usernameFromDB);
-                        intent.putExtra("password", passwordFromDB);
-
-                        startActivity(intent);
-                    } else {
-                        loginPassword.setError("Invalid Credentials");
-                        loginPassword.requestFocus();
-                    }
+                    // Navigate to main fragment
+                    Intent intent = new Intent(LoginActivity.this, sai_pooja_main_fragment.class);
+                    startActivity(intent);
                 } else {
-                    loginMoodle.setError("User does not exist");
-                    loginMoodle.requestFocus();
+                    loginPassword.setError("Invalid Credentials");
+                    loginPassword.requestFocus();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            } else {
+                loginMoodle.setError("User does not exist");
+                loginMoodle.requestFocus();
             }
         });
     }
-
 }

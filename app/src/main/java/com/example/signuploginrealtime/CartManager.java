@@ -40,4 +40,9 @@ public class CartManager {
         }
         return total;
     }
+
+    // **Clear the cart after successful order**
+    public void clearCart() {
+        cartItems.clear();  // Remove all items from the cart
+    }
 }

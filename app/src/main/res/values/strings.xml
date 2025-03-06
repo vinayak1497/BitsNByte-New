@@ -12,4 +12,5 @@
     <string name="bits_bytes"><![CDATA[Bits&Bytes]]></string>
     <string name="wallet">Wallet</string>
     <string name="balance">Balance:</string>
+    <string name="department">department</string>
 </resources>

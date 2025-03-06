@@ -24,8 +24,11 @@ public class UserDataSingleton {
 
     // Set user data in the Singleton
     public void setUserData(HelperClass userData) {
-        this.userData = userData;
+         // Prevent overwriting existing data
+            this.userData = userData;
+
     }
+
 
     // Get user data from the Singleton
     public HelperClass getUserData() {
@@ -33,10 +36,15 @@ public class UserDataSingleton {
     }
 
     // Retrieve user data from Firebase using Moodle ID (as the key)
-    public void fetchUserData(String moodleId, DataFetchCallback callback) {
+    public void fetchUserData(String username, DataFetchCallback callback) {
+        if (username == null || username.isEmpty()) {
+            callback.onFailure("Username is required to fetch user data.");
+            return;
+        }
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                .getReference("users")  // Reference to the "users" node
-                .child(moodleId);  // Assuming Moodle ID is the key for the user
+                .getReference("users")
+                .child(username);
 
         databaseReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
@@ -44,8 +52,8 @@ public class UserDataSingleton {
                 HelperClass user = snapshot.getValue(HelperClass.class);
 
                 if (user != null) {
-                    setUserData(user);  // Set the fetched user data into the Singleton
-                    callback.onSuccess(user);  // Pass the user data to the callback
+                    setUserData(user);
+                    callback.onSuccess(user);
                 } else {
                     callback.onFailure("User data not found.");
                 }
@@ -56,6 +64,7 @@ public class UserDataSingleton {
             }
         });
     }
+
 
     // Callback interface for asynchronous data retrieval
     public interface DataFetchCallback {
