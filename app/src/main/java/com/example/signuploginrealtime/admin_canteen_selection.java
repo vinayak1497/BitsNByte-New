@@ -25,7 +25,7 @@ public class admin_canteen_selection extends AppCompatActivity {
 
         CardView cardview1 = findViewById(R.id.sai_pooja_canteen_cardview);
         cardview1.setOnClickListener(v -> {
-            Intent intent = new Intent(admin_canteen_selection.this, Admin_sai_pooj_main_frag.class);
+            Intent intent = new Intent(admin_canteen_selection.this, Admin_check.class);
             startActivity(intent);
             finish();
         });

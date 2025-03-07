@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,7 +60,7 @@ public class sai_pooja_frag_nav_search extends Fragment {
         return rootView;
     }
 
-    private void setupContacts() {
+    public ArrayList<ContactModel> setupContacts() {
         arrayContact.add(new ContactModel(R.drawable.frankie_img, "Frankie", "add_to_cart",
                 "Tortilla or paratha, Boiled potatoes, Chopped onions, Green chutney", "Rs. 30"));
         arrayContact.add(new ContactModel(R.drawable.burger_img, "Burger", "add_to_cart",
@@ -79,5 +77,11 @@ public class sai_pooja_frag_nav_search extends Fragment {
                 "Pizza base, Tomato sauce, Cheese (mozzarella), Toppings (bell peppers or pepperoni)", "Rs. 50"));
         arrayContact.add(new ContactModel(R.drawable.chinese_bhel, "Chinese Bhel", "add_to_cart",
                 "Fried noodles, Mixed vegetables, Schezwan sauce, Soy sauce", "Rs. 25"));
+        arrayContact.add(new ContactModel(R.drawable.pizza, "Pizza", "add_to_cart", "Dough, tomato sauce, cheese, toppings", "Rs. 80")); // Replace with actual details
+        arrayContact.add(new ContactModel(R.drawable.pasta, "Pasta", "add_to_cart", "Pasta dough, sauce (tomato-based, cream-based, etc.), various ingredients (vegetables, meat, seafood)", "Rs. 60")); // Replace with actual details
+        arrayContact.add(new ContactModel(R.drawable.samosa, "Samosa", "add_to_cart", "Dough, potato and pea filling, spices", "Rs. 15")); // Replace with actual details
+        arrayContact.add(new ContactModel(R.drawable.sandwhich, "Sandwich", "add_to_cart", "Bread, fillings (vegetables, meat, cheese, spreads), condiments", "Rs. 15")); // Replace with actual details
+        arrayContact.add(new ContactModel(R.drawable.vadapav, "Vada Pav", "add_to_cart", "Bun (pav), potato patty (vada), chutney", "Rs. 15")); // Replace with actual details
+        return null;
     }
 }

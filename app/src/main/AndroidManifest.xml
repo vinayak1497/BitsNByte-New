@@ -16,6 +16,9 @@
         android:theme="@style/Theme.SignupLoginRealtime"
         tools:targetApi="31">
         <activity
+            android:name=".Admin_check"
+            android:exported="false" />
+        <activity
             android:name=".Addfundsgooglepay"
             android:exported="false" />
         <activity

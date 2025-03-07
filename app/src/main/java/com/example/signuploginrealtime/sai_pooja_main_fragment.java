@@ -47,7 +47,7 @@ public class sai_pooja_main_fragment extends AppCompatActivity {
         });
 
         // Set default selected item (Profile)
-        bnView.setSelectedItemId(R.id.nav_profile);
+        bnView.setSelectedItemId(R.id.navigation_home);
     }
 
     public void loadfrag(Fragment fragment, boolean flag) {
