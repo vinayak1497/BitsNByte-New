@@ -3,6 +3,7 @@ package com.example.signuploginrealtime;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -108,6 +109,9 @@ public class SignupActivity extends AppCompatActivity {
             }
 
         });
+
+        signupContactNo.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10)});
+
     }
 
     private void handleSignup() {
@@ -125,6 +129,11 @@ public class SignupActivity extends AppCompatActivity {
         // Validate input
         if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
             Toast.makeText(SignupActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (contactNo.length() != 10 ) {
+            Toast.makeText(SignupActivity.this, "Contact No. must be of 10 digits", Toast.LENGTH_SHORT).show();
             return;
         }
 

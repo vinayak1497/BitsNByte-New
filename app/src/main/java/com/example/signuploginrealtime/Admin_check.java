@@ -10,8 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Admin_check extends AppCompatActivity {
-
-    private static final String ADMIN_PASSWORD = "your_secure_password"; // Change this to your actual password
+    private static final String ADMIN_PASSWORD = "bits123"; // Change this to your actual password
     private EditText passwordInput;
     private Button loginButton;
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +19,7 @@ public class EditProfileActivity extends AppCompatActivity {
     Button saveButton;
     String nameUser, emailUser, usernameUser, passwordUser;
     DatabaseReference reference;
+    ImageView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class EditProfileActivity extends AppCompatActivity {
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
         saveButton = findViewById(R.id.saveButton);
+        backButton = findViewById(R.id.back_btn);
+        backButton.setOnClickListener(v -> finish());
 
         showData();
 

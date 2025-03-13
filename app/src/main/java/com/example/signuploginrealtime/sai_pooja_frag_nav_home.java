@@ -15,14 +15,13 @@ import androidx.fragment.app.FragmentTransaction;
 public class sai_pooja_frag_nav_home extends Fragment {
     private TextView userGreetingTextView;
     private SearchView searchView;
-
     private ImageView pizzaImage;
     private ImageView masalaDosaImage;
     private ImageView pastaImage;
     // Add more ImageViews for other food items
 
     public sai_pooja_frag_nav_home() {
-        // Required empty public constructor
+
     }
 
     @Override

@@ -30,11 +30,9 @@ public class sai_pooja_frag_nav_profile extends Fragment {
         titleUsername = view.findViewById(R.id.titleUsername);
         editProfile = view.findViewById(R.id.editButton);
         profileDepartment = view.findViewById(R.id.profileDepartment1);
-
         loadUserData();
 
         editProfile.setOnClickListener(view1 -> passUserData());
-
         return view;
     }
 

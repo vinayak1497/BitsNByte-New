@@ -14,8 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,8 +30,9 @@ import java.util.Map;
 public class sai_pooja_frag_nav_add_to_cart extends Fragment {
 
     TextView grandTotalTextView;
-    RecyclerView cartRecyclerView;
+    RecyclerView cartRecyclerView, orderHistoryRecyclerView;
     Button sendOrderButton, clearCartButton;
+    DatabaseReference orderHistoryRef;
 
     public sai_pooja_frag_nav_add_to_cart() {
         // Required empty public constructor
@@ -40,11 +44,15 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
         View view = inflater.inflate(R.layout.sai_pooja_frag_nav_add_to_cart, container, false);
         grandTotalTextView = view.findViewById(R.id.Grand_total);
         cartRecyclerView = view.findViewById(R.id.cartRecyclerView);
+        orderHistoryRecyclerView = view.findViewById(R.id.orderHistoryRecyclerView);
         sendOrderButton = view.findViewById(R.id.buy_now);
         clearCartButton = view.findViewById(R.id.clear_cart);
 
+        orderHistoryRef = FirebaseDatabase.getInstance().getReference("OrderHistory");
+
         displayCartItems();
         updateGrandTotal();
+        loadOrderHistory();
 
         sendOrderButton.setOnClickListener(v -> sendOrderToRealtimeDatabase());
         clearCartButton.setOnClickListener(v -> clearCartManually());
@@ -54,7 +62,6 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
 
     private void displayCartItems() {
         ArrayList<CartItem> cartItems = CartManager.getInstance().getCartItems();
-
         CartItemAdapter cartItemAdapter = new CartItemAdapter(cartItems);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         cartRecyclerView.setAdapter(cartItemAdapter);
@@ -74,14 +81,12 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
             return;
         }
 
-        // Fetch user details from Singleton
         HelperClass user = UserDataSingleton.getInstance().getUserData();
         if (user == null || user.getUsername() == null || user.getName() == null) {
             Toast.makeText(getContext(), "User data not found!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Generate a unique order ID
         String orderId = databaseReference.push().getKey();
         if (orderId == null) {
             Toast.makeText(getContext(), "Error generating order ID!", Toast.LENGTH_SHORT).show();
@@ -99,28 +104,56 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
             itemsList.add(itemMap);
         }
 
-        // Add user details to the order
-        orderData.put("moodleId", user.getUsername()); // Example: "23102063"
-        orderData.put("studentName", user.getName());  // Example: "Vinayak Umesh Kundar"
+        orderData.put("moodleId", user.getUsername());
+        orderData.put("studentName", user.getName());
         orderData.put("items", itemsList);
         orderData.put("totalAmount", CartManager.getInstance().getGrandTotal());
 
-        // Format timestamp for better readability
-        long currentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
-        String formattedTimestamp = sdf.format(new Date(currentTimeMillis));
+        String formattedTimestamp = sdf.format(new Date());
         orderData.put("timestamp", formattedTimestamp);
 
         databaseReference.child(orderId).setValue(orderData)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Order Placed Successfully!", Toast.LENGTH_SHORT).show();
-                    CartManager.getInstance().clearCart(); // Clear cart after order placement
+                    saveOrderHistory(user.getUsername(), orderId, orderData);
+                    CartManager.getInstance().clearCart();
                     displayCartItems();
                     updateGrandTotal();
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), "Order Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+    }
+
+    private void saveOrderHistory(String userId, String orderId, Map<String, Object> orderData) {
+        orderHistoryRef.child(userId).child(orderId).setValue(orderData);
+    }
+
+    private void loadOrderHistory() {
+        HelperClass user = UserDataSingleton.getInstance().getUserData();
+        if (user == null || user.getUsername() == null) {
+            return;
+        }
+
+        orderHistoryRef.child(user.getUsername()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<OrderHistoryItem> orderHistoryList = new ArrayList<>();
+                for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
+                    OrderHistoryItem order = orderSnapshot.getValue(OrderHistoryItem.class);
+                    orderHistoryList.add(order);
+                }
+                OrderHistoryAdapter adapter = new OrderHistoryAdapter(orderHistoryList);
+                orderHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                orderHistoryRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to load order history", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void clearCartManually() {
@@ -130,3 +163,4 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
         Toast.makeText(getContext(), "Cart Cleared!", Toast.LENGTH_SHORT).show();
     }
 }
+
