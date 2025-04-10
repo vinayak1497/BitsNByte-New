@@ -1,123 +1,77 @@
 package com.example.signuploginrealtime;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class sai_pooja_frag_nav_home extends Fragment {
     private TextView userGreetingTextView;
     private SearchView searchView;
-    private ImageView pizzaImage;
-    private ImageView masalaDosaImage;
-    private ImageView pastaImage;
-    // Add more ImageViews for other food items
 
-    public sai_pooja_frag_nav_home() {
-
-    }
+    public sai_pooja_frag_nav_home() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.sai_pooja_frag_nav_home_page, container, false);
+        setHasOptionsMenu(true);
+
+        // Set up Toolbar if defined in Fragment XML
+        Toolbar toolbar = view.findViewById(R.id.toolbar_home);
+        if (toolbar != null) {
+            ((sai_pooja_main_fragment) getActivity()).setSupportActionBar(toolbar);
+        }
 
         userGreetingTextView = view.findViewById(R.id.user_greeting);
         searchView = view.findViewById(R.id.searchView);
 
-        pizzaImage = view.findViewById(R.id.pizza_image);
-        masalaDosaImage = view.findViewById(R.id.masaladosa_image);
-        pastaImage = view.findViewById(R.id.pasta_image);
-        // Initialize other food ImageViews here
-
         String nameUser = UserDataSingleton.getInstance().getUserData().getName();
         if (nameUser != null) {
-            userGreetingTextView.setText("Hello, " + nameUser + "!");
-        } else {
-            userGreetingTextView.setText("Hello, User!");
+            userGreetingTextView.setText("Hello, " + nameUser);
         }
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                navigateToSearchFragment(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        pizzaImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startDescriptionActivity(
-                        "Pizza",
-                        "Dough, tomato sauce, cheese, toppings", // Main ingredients
-                        R.drawable.pizza,
-                        "250" // Replace with actual price
-                );
-            }
-        });
-
-        masalaDosaImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startDescriptionActivity(
-                        "Masala Dosa",
-                        "Rice, Urad dal (split black gram), Potatoes, Ghee",
-                        R.drawable.masaladosa_img,
-                        "40"
-                );
-            }
-        });
-
-        pastaImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startDescriptionActivity(
-                        "Pasta",
-                        "Pasta dough, sauce, various ingredients", // Main ingredients
-                        R.drawable.pasta,
-                        "Price" // Replace with actual price
-                );
-            }
-        });
-        // Set onClickListeners for other food ImageViews similarly
 
         return view;
     }
 
-    private void navigateToSearchFragment(String query) {
-        Bundle bundle = new Bundle();
-        bundle.putString("searchQuery", query);
-
-        sai_pooja_frag_nav_search searchFragment = new sai_pooja_frag_nav_search();
-        searchFragment.setArguments(bundle);
-
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-        transaction.replace(R.id.frag_container, searchFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.home_menu, menu); // Your menu XML
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void startDescriptionActivity(String foodName, String ingredients, int imageResId, String price) {
-        Intent intent = new Intent(getActivity(), Description_Activity.class);
-        intent.putExtra("name", foodName);
-        intent.putExtra("ingredientsId", ingredients);
-        intent.putExtra("imageResId", imageResId);
-        intent.putExtra("pricetag", price);
-        startActivity(intent);
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_chat) {
+            // 🔹 Open AI ChatBot Activity
+            Intent intent = new Intent(getActivity(), AiChatBotActivity.class);
+            startActivity(intent);
+            return true;
+
+        } else if (id == R.id.menu_feedback) {
+            // 🔹 Open Feedback Activity
+            Intent intent = new Intent(getActivity(), FeedbackActivity.class);
+            startActivity(intent);
+            return true;
+
+        } else if (id == R.id.menu_logout) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            requireActivity().finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

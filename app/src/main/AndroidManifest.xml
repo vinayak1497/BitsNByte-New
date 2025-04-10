@@ -16,6 +16,12 @@
         android:theme="@style/Theme.SignupLoginRealtime"
         tools:targetApi="31">
         <activity
+            android:name=".FeedbackActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AiChatBotActivity"
+            android:exported="false" />
+        <activity
             android:name=".VerifyEmailActivity"
             android:exported="false" />
         <activity

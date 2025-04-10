@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class SignupActivity extends AppCompatActivity {
     private Button signupButton;
     private DatabaseReference reference;
     private FirebaseAuth mAuth;
+    private ImageView backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,12 @@ public class SignupActivity extends AppCompatActivity {
         branchSpinner = findViewById(R.id.signup_branch_dropdown);
         DivSpinner = findViewById(R.id.signup_division_dropdown);
         YearSpinner = findViewById(R.id.signup_year_dropdown);
+        backBtn = findViewById(R.id.back_btn);
+
+        backBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(SignupActivity.this, option_user_admin.class);
+            startActivity(intent);
+        });
 
         // Initialize Firebase Database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance();

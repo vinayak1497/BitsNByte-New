@@ -1,6 +1,8 @@
 package com.example.signuploginrealtime;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +75,18 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
     }
 
     private void sendOrderToRealtimeDatabase() {
+        float grandTotal = CartManager.getInstance().getGrandTotal();
+
+        // Step 1: Load wallet balance from SharedPreferences
+        SharedPreferences prefs = requireContext().getSharedPreferences("WalletPrefs", Context.MODE_PRIVATE);
+        double currentBalance = Double.longBitsToDouble(prefs.getLong("wallet_balance", Double.doubleToLongBits(0.0)));
+
+        // Step 2: Check if user has sufficient balance
+        if (grandTotal > currentBalance) {
+            Toast.makeText(getContext(), "Insufficient Balance", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Orders");
 
         ArrayList<CartItem> cartItems = CartManager.getInstance().getCartItems();
@@ -107,12 +121,19 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
         orderData.put("moodleId", user.getUsername());
         orderData.put("studentName", user.getName());
         orderData.put("items", itemsList);
-        orderData.put("totalAmount", CartManager.getInstance().getGrandTotal());
+        orderData.put("totalAmount", grandTotal);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
         String formattedTimestamp = sdf.format(new Date());
         orderData.put("timestamp", formattedTimestamp);
 
+        // Step 3: Deduct wallet balance and save updated value
+        double updatedBalance = currentBalance - grandTotal;
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("wallet_balance", Double.doubleToLongBits(updatedBalance));
+        editor.apply();
+
+        // Step 4: Proceed with placing the order
         databaseReference.child(orderId).setValue(orderData)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Order Placed Successfully!", Toast.LENGTH_SHORT).show();
@@ -125,6 +146,8 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
                         Toast.makeText(getContext(), "Order Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
     }
+
+
 
     private void saveOrderHistory(String userId, String orderId, Map<String, Object> orderData) {
         orderHistoryRef.child(userId).child(orderId).setValue(orderData);

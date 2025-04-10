@@ -3,11 +3,13 @@ package com.example.signuploginrealtime;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText loginMoodle, loginPassword;
     Button loginButton;
     TextView signupRedirectText;
+    ImageView backButton;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,11 @@ public class LoginActivity extends AppCompatActivity {
         loginPassword = findViewById(R.id.login_password);
         signupRedirectText = findViewById(R.id.signupRedirectText);
         loginButton = findViewById(R.id.login_button);
+        backButton = findViewById(R.id.back_btn);
+        backButton.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, option_user_admin.class);
+            startActivity(intent);
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

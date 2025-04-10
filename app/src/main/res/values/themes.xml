@@ -1,6 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.SignupLoginRealtime" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Disable the default ActionBar to avoid conflict -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/yellow</item>
         <item name="colorPrimaryVariant">@color/dull_yellow</item>
@@ -21,5 +25,4 @@
         <item name="cornerSizeTopLeft">20dp</item>
         <item name="cornerSizeBottomLeft">20dp</item>
     </style>
-
 </resources>

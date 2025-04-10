@@ -11,10 +11,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.razorpay.PaymentResultListener;
 
-public class sai_pooja_main_fragment extends AppCompatActivity {
+public class sai_pooja_main_fragment extends AppCompatActivity implements PaymentResultListener {
 
     private BottomNavigationView bnView;
+    private String razorpayPaymentID, response;
+    private int code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,22 @@ public class sai_pooja_main_fragment extends AppCompatActivity {
         ft.replace(R.id.frag_container, fragment);  // Always replace, never add
         ft.commit();
 
+    }
+
+    @Override
+    public void onPaymentSuccess(String s) {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frag_container);
+        if (currentFragment instanceof sai_pooja_frag_nav_wallet) {
+            ((sai_pooja_frag_nav_wallet) currentFragment).handlePaymentSuccess(s);
+        }
+    }
+
+    @Override
+    public void onPaymentError(int code, String response) {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frag_container);
+        if (currentFragment instanceof sai_pooja_frag_nav_wallet) {
+            ((sai_pooja_frag_nav_wallet) currentFragment).handlePaymentError(code, response);
+        }
     }
 
 }

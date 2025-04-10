@@ -3,8 +3,6 @@ plugins {
     alias(libs.plugins.google.gms.google.services) // Make sure this line is present
 }
 
-
-
 android {
     namespace = "com.example.signuploginrealtime"
     compileSdk = 35
@@ -51,9 +49,14 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation ("com.google.android.gms:play-services-wallet:19.4.0")
-    implementation ("com.razorpay:checkout:1.6.40")
+    implementation("com.razorpay:checkout:1.6.41")
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 apply(plugin = "com.google.gms.google-services")
