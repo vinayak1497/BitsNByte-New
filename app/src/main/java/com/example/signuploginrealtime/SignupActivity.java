@@ -1,5 +1,7 @@
 package com.example.signuploginrealtime;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText signupName, signupEmail, signupMoodle, signupPassword, signupContactNo;
@@ -23,11 +27,13 @@ public class SignupActivity extends AppCompatActivity {
     Spinner branchSpinner, DivSpinner, YearSpinner;
     private Button signupButton;
     private DatabaseReference reference;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        mAuth = FirebaseAuth.getInstance();
 
         // Initialize views
         signupName = findViewById(R.id.signup_name);
@@ -46,7 +52,12 @@ public class SignupActivity extends AppCompatActivity {
         reference = database.getReference("users");
 
         // Signup button click listener
-        signupButton.setOnClickListener(view -> handleSignup());
+
+        signupButton.setOnClickListener(view -> {
+            if (validateInputFields()) {
+                registerUser();
+            }
+        });
 
         // Redirect to LoginActivity
         loginRedirectText.setOnClickListener(view -> {
@@ -118,50 +129,140 @@ public class SignupActivity extends AppCompatActivity {
         // Get input from user
         String name = signupName.getText().toString().trim();
         String email = signupEmail.getText().toString().trim();
-        String username = signupMoodle.getText().toString().trim();
+        String moodleId = signupMoodle.getText().toString().trim();
         String password = signupPassword.getText().toString().trim();
         String contactNo = signupContactNo.getText().toString().trim();
         String branch = branchSpinner.getSelectedItem().toString();
         String division = DivSpinner.getSelectedItem().toString();
         String year = YearSpinner.getSelectedItem().toString();
 
-
-        // Validate input
-        if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
+        if (!validateInputFields()) {
+            return; // If input is not valid, stop here
         }
 
-        if (contactNo.length() != 10 ) {
-            Toast.makeText(SignupActivity.this, "Contact No. must be of 10 digits", Toast.LENGTH_SHORT).show();
-            return;
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+
+        // Create Firebase Authentication account
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Send verification email
+                        mAuth.getCurrentUser().sendEmailVerification()
+                                .addOnCompleteListener(verifyTask -> {
+                                    if (verifyTask.isSuccessful()) {
+                                        Toast.makeText(SignupActivity.this, "Verification email sent to " + email, Toast.LENGTH_LONG).show();
+
+                                        // Save to Firebase Realtime Database
+                                        HelperClass helperClass = new HelperClass(name, email, moodleId, password, contactNo, branch, division, year);
+
+                                        reference.child(moodleId).setValue(helperClass).addOnCompleteListener(dbTask -> {
+                                            if (dbTask.isSuccessful()) {
+                                                Log.d("SignupActivity", "Data saved in database");
+
+                                                // Save to Singleton
+                                                UserDataSingleton.getInstance().setUserData(helperClass);
+
+                                                // Redirect to login
+                                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                                intent.putExtra("emailVerification", true);
+                                                startActivity(intent);
+                                                finish();
+                                            } else {
+                                                Toast.makeText(SignupActivity.this, "Failed to save data.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                    } else {
+                                        Toast.makeText(SignupActivity.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(SignupActivity.this, "Signup failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private boolean validateInputFields() {
+        boolean isValid = true;
+
+        if (signupName.getText().toString().trim().isEmpty()) {
+            signupName.setError("Name is required");
+            isValid = false;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(SignupActivity.this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
-            return;
+        if (signupMoodle.getText().toString().trim().isEmpty()) {
+            signupMoodle.setError("Moodle ID is required");
+            isValid = false;
         }
 
-        if (password.length() < 6) {
-            Toast.makeText(SignupActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            return;
+        if (signupEmail.getText().toString().trim().isEmpty()) {
+            signupEmail.setError("Email is required");
+            isValid = false;
         }
 
-        // Create user object
-        HelperClass helperClass = new HelperClass(name, email, username, password, contactNo, branch, division, year);
+        if (signupPassword.getText().toString().trim().isEmpty()) {
+            signupPassword.setError("Password is required");
+            isValid = false;
+        }
 
-        // Save to Firebase
-        reference.child(username).setValue(helperClass).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(SignupActivity.this, "Signup successful!", Toast.LENGTH_SHORT).show();
-                Log.d("SignupActivity", "Data written to Firebase successfully");
-                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish(); // Prevent going back to signup
-            } else {
-                Toast.makeText(SignupActivity.this, "Signup failed. Try again later.", Toast.LENGTH_SHORT).show();
-                Log.e("SignupActivity", "Error writing to Firebase", task.getException());
-            }
-        });
+        if (signupContactNo.getText().toString().trim().isEmpty()) {
+            signupContactNo.setError("Contact number is required");
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void registerUser() {
+        String email = signupEmail.getText().toString().trim();
+        String password = signupPassword.getText().toString().trim();
+        String username = signupMoodle.getText().toString().trim();
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                        if (firebaseUser != null) {
+                            firebaseUser.sendEmailVerification()
+                                    .addOnCompleteListener(verifyTask -> {
+                                        if (verifyTask.isSuccessful()) {
+
+                                            // Store user data in Realtime DB
+                                            storeUserDataInFirebase();
+
+                                            // Redirect to verify email page
+                                            Intent intent = new Intent(SignupActivity.this, VerifyEmailActivity.class);
+                                            intent.putExtra("username", username);
+                                            startActivity(intent);
+                                            finish();
+
+                                        } else {
+                                            Toast.makeText(this, "Failed to send verification email", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+
+                    } else {
+                        Toast.makeText(this, "Signup Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void storeUserDataInFirebase() {
+        String name = signupName.getText().toString().trim();
+        String username = signupMoodle.getText().toString().trim();
+        String email = signupEmail.getText().toString().trim();
+        String password = signupPassword.getText().toString().trim();
+        String contact = signupContactNo.getText().toString().trim();
+        String branch = branchSpinner.getSelectedItem().toString();
+        String division = DivSpinner.getSelectedItem().toString();
+        String year = YearSpinner.getSelectedItem().toString();
+
+        HelperClass helperClass = new HelperClass(name, email, username, password, contact, branch, division, year);
+        FirebaseDatabase.getInstance().getReference("users")
+                .child(username)
+                .setValue(helperClass);
     }
 }

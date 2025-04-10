@@ -87,7 +87,8 @@ public class HelperClass {
         return contactNo;
     }
 
-    public void setContactNo(String password) {
+    public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
     }
+
 }
