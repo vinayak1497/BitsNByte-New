@@ -24,7 +24,7 @@
         android:layout_margin="8dp"
         android:layout_marginBottom="80dp"
         android:background="@drawable/lavender_border"
-        android:hint="Ask any financial query!"
+        android:hint="Ask any food related query!"
         android:padding="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

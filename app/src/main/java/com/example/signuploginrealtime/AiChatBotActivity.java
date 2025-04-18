@@ -154,7 +154,8 @@ public class AiChatBotActivity extends AppCompatActivity implements ChatAdapter.
                 "food", "recipe", "nutrition", "calories", "protein", "carbs", "fat", "healthy", "diet", "cooking",
                 "veg", "non veg", "paneer", "chicken", "masala", "rice", "dal", "biryani", "roti", "sabzi",
                 "breakfast", "lunch", "dinner", "street food", "junk food", "milk", "vitamins", "snacks", "dessert",
-                "Indian food", "fruits", "vegetables", "chai", "maggi", "bread", "oil", "sugar", "salt", "ingredients"
+                "Indian food", "fruits", "vegetables", "chai", "maggi", "bread", "oil", "sugar", "salt", "ingredients",
+                "Vada Pav", "Frankie", "Samosa", "Masala Dosa"
         };
 
         for (String keyword : foodKeywords) {
