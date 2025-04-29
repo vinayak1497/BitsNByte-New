@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "1074051432811",
-    "firebase_url": "https://database-bitsnbytes-default-rtdb.firebaseio.com",
-    "project_id": "database-bitsnbytes",
-    "storage_bucket": "database-bitsnbytes.firebasestorage.app"
+    "project_number": "106437137933",
+    "firebase_url": "https://bitsandbytes-e3552-default-rtdb.firebaseio.com",
+    "project_id": "bitsandbytes-e3552",
+    "storage_bucket": "bitsandbytes-e3552.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1074051432811:android:ce7420859997760f070c2e",
+        "mobilesdk_app_id": "1:106437137933:android:2c6f01135ec9b8b2ef6744",
         "android_client_info": {
           "package_name": "com.example.signuploginrealtime"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD5qzESIyHOlJTU-HGWz33YVyD0hINvOtc"
+          "current_key": "AIzaSyDrf10gXjTIW4B5ghGSSvJjNe5ahZj6qho"
         }
       ],
       "services": {

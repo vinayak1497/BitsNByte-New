@@ -1,6 +1,7 @@
 package com.example.signuploginrealtime;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +23,7 @@ public class Addfundsgooglepay extends AppCompatActivity implements PaymentResul
 
     private void startPayment() {
         Checkout checkout = new Checkout();
-        checkout.setKeyID("rzp_test_qHzHvYcPhcNfSz"); // 🔁 Replace with your test key
+        checkout.setKeyID("rzp_test_hWAJc3P7pLUj2H"); // 🔁 Replace with your test key
 
         try {
             JSONObject options = new JSONObject();
@@ -39,8 +40,10 @@ public class Addfundsgooglepay extends AppCompatActivity implements PaymentResul
 
             checkout.open(Addfundsgooglepay.this, options);
         } catch (Exception e) {
+            Log.e("RazorpayError", "Payment start error", e);  // 🔥 Add detailed log
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override
@@ -53,9 +56,16 @@ public class Addfundsgooglepay extends AppCompatActivity implements PaymentResul
 
     @Override
     public void onPaymentError(int code, String response) {
-        Toast.makeText(this, "Payment Failed: " + response, Toast.LENGTH_SHORT).show();
+        Log.e("RazorpayError", "Payment failed - Code: " + code + ", Response: " + response);
 
-        // 👇 Close activity on failure too
+        if (response != null && response.contains("payment_cancelled")) {
+            Toast.makeText(this, "Payment Cancelled by you or UPI app timeout.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Payment Failed: " + response, Toast.LENGTH_LONG).show();
+        }
         finish();
     }
+
+
+
 }

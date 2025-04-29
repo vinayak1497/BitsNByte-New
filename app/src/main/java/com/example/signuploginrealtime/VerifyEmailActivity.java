@@ -20,8 +20,6 @@ public class VerifyEmailActivity extends AppCompatActivity {
     TextView verifyMsg;
     String username;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

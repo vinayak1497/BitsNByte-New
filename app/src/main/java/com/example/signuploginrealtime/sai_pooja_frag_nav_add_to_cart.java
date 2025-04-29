@@ -15,7 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +35,7 @@ import java.util.Map;
 public class sai_pooja_frag_nav_add_to_cart extends Fragment {
 
     TextView grandTotalTextView;
-    RecyclerView cartRecyclerView, orderHistoryRecyclerView;
+    RecyclerView cartRecyclerView;
     Button sendOrderButton, clearCartButton;
     DatabaseReference orderHistoryRef;
 
@@ -46,7 +49,7 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
         View view = inflater.inflate(R.layout.sai_pooja_frag_nav_add_to_cart, container, false);
         grandTotalTextView = view.findViewById(R.id.Grand_total);
         cartRecyclerView = view.findViewById(R.id.cartRecyclerView);
-        orderHistoryRecyclerView = view.findViewById(R.id.orderHistoryRecyclerView);
+
         sendOrderButton = view.findViewById(R.id.buy_now);
         clearCartButton = view.findViewById(R.id.clear_cart);
 
@@ -54,10 +57,22 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
 
         displayCartItems();
         updateGrandTotal();
-        loadOrderHistory();
 
         sendOrderButton.setOnClickListener(v -> sendOrderToRealtimeDatabase());
         clearCartButton.setOnClickListener(v -> clearCartManually());
+        TabLayout tabLayout = view.findViewById(R.id.orderTabLayout);
+        ViewPager2 viewPager = view.findViewById(R.id.orderViewPager);
+
+        OrderViewPagerAdapter adapter = new OrderViewPagerAdapter(this);
+        viewPager.setAdapter(adapter);
+
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> {
+                    if (position == 0) tab.setText("Ongoing");
+                    else if (position == 1) tab.setText("Accepted");
+                    else if (position == 2) tab.setText("Completed");
+                }).attach();
+
 
         return view;
     }
@@ -122,6 +137,7 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
         orderData.put("studentName", user.getName());
         orderData.put("items", itemsList);
         orderData.put("totalAmount", grandTotal);
+        orderData.put("status", "Ongoing");
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
         String formattedTimestamp = sdf.format(new Date());
@@ -151,32 +167,6 @@ public class sai_pooja_frag_nav_add_to_cart extends Fragment {
 
     private void saveOrderHistory(String userId, String orderId, Map<String, Object> orderData) {
         orderHistoryRef.child(userId).child(orderId).setValue(orderData);
-    }
-
-    private void loadOrderHistory() {
-        HelperClass user = UserDataSingleton.getInstance().getUserData();
-        if (user == null || user.getUsername() == null) {
-            return;
-        }
-
-        orderHistoryRef.child(user.getUsername()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<OrderHistoryItem> orderHistoryList = new ArrayList<>();
-                for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
-                    OrderHistoryItem order = orderSnapshot.getValue(OrderHistoryItem.class);
-                    orderHistoryList.add(order);
-                }
-                OrderHistoryAdapter adapter = new OrderHistoryAdapter(orderHistoryList);
-                orderHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                orderHistoryRecyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load order history", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void clearCartManually() {

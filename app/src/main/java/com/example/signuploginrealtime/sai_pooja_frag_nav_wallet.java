@@ -19,8 +19,16 @@ import com.razorpay.PaymentResultListener;
 
 import org.json.JSONObject;
 
-public class sai_pooja_frag_nav_wallet extends Fragment{
+public class sai_pooja_frag_nav_wallet extends Fragment implements PaymentResultListener {
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID) {
+        handlePaymentSuccess(razorpayPaymentID);
+    }
 
+    @Override
+    public void onPaymentError(int code, String response) {
+        handlePaymentError(code, response);
+    }
     private static final String TAG = "WalletFragment";
     private static final String PREFS_NAME = "WalletPrefs";
     private static final String BALANCE_KEY = "wallet_balance";
@@ -59,7 +67,7 @@ public class sai_pooja_frag_nav_wallet extends Fragment{
 
     private void startPayment() {
         Checkout checkout = new Checkout();
-        checkout.setKeyID("rzp_test_qHzHvYcPhcNfSz"); // Replace with your real test key
+        checkout.setKeyID("rzp_test_hWAJc3P7pLUj2H"); // Replace with your real test key
 
         try {
             JSONObject options = new JSONObject();
@@ -74,9 +82,10 @@ public class sai_pooja_frag_nav_wallet extends Fragment{
             checkout.open(requireActivity(), options);
 
         } catch (Exception e) {
-            Log.e(TAG, "Error in starting payment: " + e.getMessage(), e);
+            Log.e("RazorpayError", "Payment start error", e);  // 🔥
             Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void handlePaymentSuccess(@NonNull String razorpayPaymentID) {

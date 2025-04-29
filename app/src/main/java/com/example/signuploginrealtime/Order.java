@@ -4,39 +4,47 @@ import java.util.List;
 
 public class Order {
     private String orderId;
-    private String moodleId;
     private String studentName;
-    private List<OrderItem> items;
     private double totalAmount;
     private String timestamp;
+    private String status;
+    private List<OrderItem> items;
+    private String userId;
 
     public Order() {
-        // Default constructor required for Firebase
     }
 
-    public Order(String orderId, String moodleId, String studentName, List<OrderItem> items, double totalAmount, String timestamp) {
+    // ✅ Full constructor
+    public Order(String orderId, String studentName, List<OrderItem> items, double totalAmount, String timestamp, String status) {
         this.orderId = orderId;
-        this.moodleId = moodleId;
         this.studentName = studentName;
         this.items = items;
         this.totalAmount = totalAmount;
         this.timestamp = timestamp;
+        this.status = status;
+        this.userId = userId;
+
     }
 
+    // Getters
     public String getOrderId() {
         return orderId;
     }
-
-    public String getMoodleId() {
-        return moodleId;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
 
     public String getStudentName() {
         return studentName;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
     }
 
     public double getTotalAmount() {
@@ -45,5 +53,13 @@ public class Order {
 
     public String getTimestamp() {
         return timestamp;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
     }
 }

@@ -17,10 +17,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AdminOrdersFragment extends Fragment {
 
@@ -37,12 +38,24 @@ public class AdminOrdersFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_admin_orders_fragment, container, false);
+        View view = inflater.inflate(R.layout.activity_admin_orders_fragment, container, false); // Correct XML
         ordersRecyclerView = view.findViewById(R.id.ordersRecyclerView);
         ordersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         orderList = new ArrayList<>();
-        ordersAdapter = new OrdersAdapter(orderList);
+        ordersAdapter = new OrdersAdapter(orderList, new OrdersAdapter.OnOrderStatusChangeListener() {
+            @Override
+            public void onAcceptOrder(Order order) {
+                updateOrderStatus(order.getOrderId(), "Accepted", order.getUserId());
+
+            }
+
+            @Override
+            public void onReadyOrder(Order order) {
+                updateOrderStatus(order.getOrderId(), "Ready", order.getUserId());
+
+            }
+        });
         ordersRecyclerView.setAdapter(ordersAdapter);
 
         fetchOrdersFromDatabase();
@@ -56,25 +69,13 @@ public class AdminOrdersFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 orderList.clear();
                 for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
-                    String orderId = orderSnapshot.getKey();
-                    String moodleId = orderSnapshot.child("moodleId").getValue(String.class);
-                    String studentName = orderSnapshot.child("studentName").getValue(String.class);
-                    double totalAmount = orderSnapshot.child("totalAmount").getValue(Double.class);
-                    String timestamp = orderSnapshot.child("timestamp").getValue(String.class);
-
-                    List<OrderItem> itemsList = new ArrayList<>();
-                    DataSnapshot itemsSnapshot = orderSnapshot.child("items");
-                    for (DataSnapshot item : itemsSnapshot.getChildren()) {
-                        String name = item.child("name").getValue(String.class);
-                        double price = item.child("price").getValue(Double.class);
-                        int quantity = item.child("quantity").getValue(Integer.class);
-
-                        itemsList.add(new OrderItem(name, price, quantity));
+                    Order order = orderSnapshot.getValue(Order.class);
+                    if (order != null) {
+                        order.setOrderId(orderSnapshot.getKey()); // <<< Important line to add
+                        orderList.add(order);
                     }
-
-                    Order order = new Order(orderId, moodleId, studentName, itemsList, totalAmount, timestamp);
-                    orderList.add(order);
                 }
+
                 ordersAdapter.notifyDataSetChanged();
             }
 
@@ -84,4 +85,31 @@ public class AdminOrdersFragment extends Fragment {
             }
         });
     }
+
+    private void updateOrderStatus(String orderId, String newStatus, String userId) {
+        DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference("Orders");
+        DatabaseReference orderHistoryRef = FirebaseDatabase.getInstance().getReference("OrderHistory");
+
+        // 1. Update status in Orders (admin panel)
+        ordersRef.child(orderId).child("status").setValue(newStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Order status updated successfully!", Toast.LENGTH_SHORT).show();
+
+                    // 2. Update status in User's OrderHistory
+                    if (userId != null) {
+                        orderHistoryRef.child(userId).child(orderId).child("status").setValue(newStatus)
+                                .addOnSuccessListener(aVoid1 -> {
+                                    // Optionally show a success message
+                                    // Toast.makeText(getContext(), "User order history updated!", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getContext(), "Failed to update user order history: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to update order status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
 }

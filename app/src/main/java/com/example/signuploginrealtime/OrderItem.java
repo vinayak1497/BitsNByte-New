@@ -5,16 +5,18 @@ public class OrderItem {
     private double price;
     private int quantity;
 
+    // 🔥 Required empty constructor for Firebase
     public OrderItem() {
-        // Default constructor required for Firebase
     }
 
+    // ✅ Full constructor
     public OrderItem(String name, double price, int quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
     }
 
+    // Getters
     public String getName() {
         return name;
     }
