@@ -23,7 +23,7 @@ public class Addfundsgooglepay extends AppCompatActivity implements PaymentResul
 
     private void startPayment() {
         Checkout checkout = new Checkout();
-        checkout.setKeyID("rzp_test_hWAJc3P7pLUj2H"); // 🔁 Replace with your test key
+        checkout.setKeyID("YOUR_API_KEY_HERE"); // Since, posting this on github, i had removed the api, you can paste it here your test api key and it would run perfectly!
 
         try {
             JSONObject options = new JSONObject();

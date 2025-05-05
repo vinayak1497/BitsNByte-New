@@ -3,44 +3,71 @@ package com.example.signuploginrealtime;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
+public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.OrderHistoryViewHolder> {
 
-public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder> {
-    private List<OrderHistoryItem> orderHistoryList;
+    private List<OrderHistoryItem> orderHistoryItems;
+    private OnCancelClickListener onCancelClickListener;
 
-    public OrderHistoryAdapter(List<OrderHistoryItem> orderHistoryList) {
-        this.orderHistoryList = orderHistoryList;
+    // Constructor
+    public OrderHistoryAdapter(List<OrderHistoryItem> orderHistoryItems, OnCancelClickListener onCancelClickListener) {
+        this.orderHistoryItems = orderHistoryItems;
+        this.onCancelClickListener = onCancelClickListener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OrderHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate your item layout here (e.g., R.layout.order_history_item)
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_history_item, parent, false);
-        return new ViewHolder(view);
+        return new OrderHistoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        OrderHistoryItem order = orderHistoryList.get(position);
-        holder.orderDateTextView.setText("Order Date: " + order.getTimestamp());
-        holder.totalAmountTextView.setText("Total: ₹" + order.getTotalAmount());
+    public void onBindViewHolder(@NonNull OrderHistoryViewHolder holder, int position) {
+        OrderHistoryItem order = orderHistoryItems.get(position);
+        // Bind data to your view holder
+        holder.bind(order);
     }
 
     @Override
     public int getItemCount() {
-        return orderHistoryList.size();
+        return orderHistoryItems.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView orderDateTextView, totalAmountTextView;
+    // ViewHolder class to hold the views
+    public class OrderHistoryViewHolder extends RecyclerView.ViewHolder {
+        // Define your views here
+        TextView orderStatusTextView;
+        Button cancelOrderButton;
 
-        public ViewHolder(@NonNull View itemView) {
+        public OrderHistoryViewHolder(View itemView) {
             super(itemView);
-            orderDateTextView = itemView.findViewById(R.id.order_date);
-            totalAmountTextView = itemView.findViewById(R.id.order_total);
+            orderStatusTextView = itemView.findViewById(R.id.orderStatusTextView);
+            cancelOrderButton = itemView.findViewById(R.id.cancelOrderButton);
+
+            // Set click listener for the cancel button
+            cancelOrderButton.setOnClickListener(v -> {
+                // Get the current order at the adapter position
+                OrderHistoryItem order = orderHistoryItems.get(getAdapterPosition());
+                onCancelClickListener.onCancelClick(order); // Notify the listener
+            });
         }
+
+        // Bind data to the views
+        public void bind(OrderHistoryItem order) {
+            orderStatusTextView.setText(order.getStatus());
+        }
+    }
+
+    // Interface for the cancel click listener
+    public interface OnCancelClickListener {
+        void onCancelClick(OrderHistoryItem order);
     }
 }

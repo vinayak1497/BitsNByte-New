@@ -37,7 +37,8 @@ public class AiChatBotActivity extends AppCompatActivity implements ChatAdapter.
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     private static final String MODEL_NAME = "gemini-2.0-flash";
-    private static final String API_KEY = "AIzaSyCzNfaMSGCvoCVjrFdUo2fAV8yXNK9WK-g";
+    private static final String API_KEY = "YOUR_API_KEY_HERE"; // Since, posting this on github, i had removed the api, you can paste it here your api key and it would run perfectly!
+
     private TextToSpeech tts;
     private boolean isSpeaking = false;
 

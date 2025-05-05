@@ -23,5 +23,21 @@
         android:text="Total: ₹0"
         android:textSize="14sp"
         android:textColor="@android:color/darker_gray"/>
+    <TextView
+        android:id="@+id/orderStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order Status"
+        android:textSize="16sp"/>
+    <Button
+        android:id="@+id/cancelOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel Order"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="end" />
+
 
 </LinearLayout>

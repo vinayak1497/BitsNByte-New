@@ -54,7 +54,23 @@ public class OrderAcceptedFragment extends Fragment {
                         list.add(order);
                     }
                 }
-                OrderHistoryAdapter adapter = new OrderHistoryAdapter(list);
+
+                // Pass the list and the OnCancelClickListener to the adapter
+                OrderHistoryAdapter adapter = new OrderHistoryAdapter(list, new OrderHistoryAdapter.OnCancelClickListener() {
+                    @Override
+                    public void onCancelClick(OrderHistoryItem order) {
+                        DatabaseReference singleOrderRef = FirebaseDatabase.getInstance().getReference("OrderHistory")
+                                .child(user.getUsername())
+                                .child(order.getOrderId());
+
+                        singleOrderRef.child("status").setValue("Cancelled")
+                                .addOnSuccessListener(unused ->
+                                        Toast.makeText(getContext(), "Order cancelled", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(getContext(), "Failed to cancel order", Toast.LENGTH_SHORT).show());
+                    }
+                });
+
                 recyclerView.setAdapter(adapter);
             }
 
